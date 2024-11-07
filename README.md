@@ -1,6 +1,6 @@
 # trie
 
-Module with concurrent safe trie implementation
+Module with concurrent safe trie implementation.
 
 ## Installation
 
@@ -84,7 +84,7 @@ root
 
 1. **Insert "cat"**
    - Create nodes: c → a → t
-   - Mark 't' as the end of a word.
+   - Mark 't' as the end of a word
 
 2. **Insert "car"**
    - Traverse existing nodes: c → a
