@@ -3,9 +3,13 @@ on:
   push:
     branches:
       - '*'
+    paths:
+      - '*.go'
   pull_request:
     branches:
       - "*"
+    paths:
+      - '*.go'
 jobs:
   trie-tests:
     runs-on: ubuntu-latest
