@@ -208,35 +208,35 @@ func TestConcurrentInsertAndFailingSearch(t *testing.T) {
 }
 
 func BenchmarkTrieInsert(b *testing.B) {
-	tr := NewTrie()
+	trie := NewTrie()
 	words := []string{"apple", "banana", "grape", "orange", "watermelon"}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		word := words[i%len(words)]
-		tr.Insert(word)
+		trie.Insert(word)
 	}
 }
 
 func BenchmarkTrieSearch(b *testing.B) {
-	tr := NewTrie()
+	trie := NewTrie()
 	words := []string{"apple", "banana", "grape", "orange", "watermelon"}
 	for _, word := range words {
-		tr.Insert(word)
+		trie.Insert(word)
 	}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		word := words[i%len(words)]
-		tr.Search(word)
+		trie.Search(word)
 	}
 }
 
 func BenchmarkTrieStartsWith(b *testing.B) {
-	tr := NewTrie()
+	trie := NewTrie()
 	words := []string{"apple", "banana", "grape", "orange", "watermelon"}
 	for _, word := range words {
-		tr.Insert(word)
+		trie.Insert(word)
 	}
 
 	prefixes := []string{"a", "b", "gr", "ora", "w"}
@@ -244,22 +244,22 @@ func BenchmarkTrieStartsWith(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		prefix := prefixes[i%len(prefixes)]
-		tr.StartsWith(prefix)
+		trie.StartsWith(prefix)
 	}
 }
 
 func BenchmarkTrieRemove(b *testing.B) {
-	tr := NewTrie()
+	trie := NewTrie()
 	words := []string{"apple", "banana", "grape", "orange", "watermelon", "application", "apply", "app", "grapefruit"}
 
 	for _, word := range words {
-		tr.Insert(word)
+		trie.Insert(word)
 	}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		word := words[i%len(words)]
-		tr.Remove(word)
-		tr.Insert(word)
+		trie.Remove(word)
+		trie.Insert(word)
 	}
 }
