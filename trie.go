@@ -82,3 +82,47 @@ func (t *Trie) StartsWith(prefix string) bool {
 	}
 	return true
 }
+
+// Remove deletes a word from the trie if it exists
+func (t *Trie) Remove(word string) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	removeHelper(t.root, word, 0)
+}
+
+func removeHelper(current *node, word string, depth int) bool {
+	if depth == len(word) {
+		if !current.isEnd {
+			return false
+		}
+		current.isEnd = false
+
+		for _, child := range current.children {
+			if child != nil {
+				return false
+			}
+		}
+		return true
+	}
+
+	index := word[depth] - 'a'
+	if index < 0 || index >= 26 || current.children[index] == nil {
+		return false
+	}
+
+	if removeHelper(current.children[index], word, depth+1) {
+		current.children[index] = nil
+
+		if !current.isEnd {
+			for _, child := range current.children {
+				if child != nil {
+					return false
+				}
+			}
+			return true
+		}
+	}
+
+	return false
+}
