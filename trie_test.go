@@ -49,6 +49,57 @@ func TestStartsWith(t *testing.T) {
 	}
 }
 
+func TestRemove(t *testing.T) {
+	trie := NewTrie()
+
+	trie.Insert("apple")
+	trie.Insert("app")
+	trie.Insert("apply")
+
+	// Ensure all words are present initially
+	if !trie.Search("apple") {
+		t.Error("Expected 'apple' to be found in the trie")
+	}
+	if !trie.Search("app") {
+		t.Error("Expected 'app' to be found in the trie")
+	}
+	if !trie.Search("apply") {
+		t.Error("Expected 'apply' to be found in the trie")
+	}
+
+	// Remove "apple" and ensure that only it is removed
+	trie.Remove("apple")
+	if trie.Search("apple") {
+		t.Error("Expected 'apple' to be removed from the trie")
+	}
+	if !trie.Search("app") {
+		t.Error("Expected 'app' to still be found in the trie")
+	}
+	if !trie.Search("apply") {
+		t.Error("Expected 'apply' to still be found in the trie")
+	}
+
+	// Remove "app" and ensure that it doesn't affect "apply"
+	trie.Remove("app")
+	if trie.Search("app") {
+		t.Error("Expected 'app' to be removed from the trie")
+	}
+	if !trie.Search("apply") {
+		t.Error("Expected 'apply' to still be found in the trie")
+	}
+
+	// Remove "apply" and ensure that trie is empty
+	trie.Remove("apply")
+	if trie.Search("apply") {
+		t.Error("Expected 'apply' to be removed from the trie")
+	}
+
+	trie.Remove("nonexistent")
+	if trie.Search("app") || trie.Search("apple") || trie.Search("apply") {
+		t.Error("Trie state changed incorrectly after trying to remove a non-existent word")
+	}
+}
+
 func TestInsertAndSearchWithNonAlphabeticChars(t *testing.T) {
 	trie := NewTrie()
 
@@ -194,5 +245,21 @@ func BenchmarkTrieStartsWith(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		prefix := prefixes[i%len(prefixes)]
 		tr.StartsWith(prefix)
+	}
+}
+
+func BenchmarkTrieRemove(b *testing.B) {
+	tr := NewTrie()
+	words := []string{"apple", "banana", "grape", "orange", "watermelon", "application", "apply", "app", "grapefruit"}
+
+	for _, word := range words {
+		tr.Insert(word)
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		word := words[i%len(words)]
+		tr.Remove(word)
+		tr.Insert(word)
 	}
 }
