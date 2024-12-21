@@ -65,6 +65,30 @@ The `StartsWith` method checks if any word in the trie begins with the given pre
 
 Unlike `Search`, this method doesn't check the `isEnd` flag since it only verifies the prefix existence.
 
+### Remove(word string)
+The `Remove` method deletes a word from the trie if it exists:
+
+1. It employs a recursive helper function that traverses the trie:
+   - Starts from the root node and processes the word character by character
+   - For each character:
+      - Calculates array index (0-25)
+      - Verifies index validity
+      - Checks if the path exists
+2. The deletion process has several key conditions:
+   - When reaching the end of the word:
+      - Verifies if it's a valid word ending (isEnd = true)
+      - Unmarks the word ending (sets isEnd to false)
+      - Checks if the node has no children to determine if it can be removed
+   - During backtracking:
+      - Removes nodes that have no children and aren't word endings
+      - Preserves nodes that are part of other words
+      - Maintains the trie structure for shared prefixes
+3. Returns false in the following cases:
+   - Word doesn't exist in the trie
+   - Character index is invalid
+   - Node has children and can't be removed
+   - Node is part of another word
+
 ## Example
 
 Consider inserting the words: cat, car and dog into a trie:
